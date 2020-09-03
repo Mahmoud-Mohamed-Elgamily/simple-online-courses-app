@@ -3,27 +3,33 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     return queryInterface.createTable("users", {
-      id: Sequelize.UUIDV4,
-      name: Sequelize.STRING(15),
-      email: Sequelize.STRING(100),
-      password_hash: Sequelize.STRING(255),
-      password: {
-        type: Sequelize.DataTypes.VIRTUAL,
-        set: function (val) {
-          this.setDataValue('password', val); // Remember to set the data value, otherwise it won't be validated
-          this.setDataValue('password_hash', this.salt + val);
-        },
+      id: {
+        type: Sequelize.UUIDV4,
+        primaryKey: true,
+        defaultValue: Sequelize.UUIDV1
+      },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: Sequelize.STRING(100),
+        unique: true,
+        allowNull: false,
         validate: {
-          isLongEnough: function (val) {
-            if (val.length < 7) {
-              throw new Error("Please choose a longer password");
-            }
-          }
+          isEmail: true,
         }
       },
-      createdAt: Sequelize.DATE,
-      updatedAt: Sequelize.DATE
+      role: {
+        type: Sequelize.ENUM,
+        values: ['user', 'admin'],
+        defaultValue: 'user',
+      },
+      password: Sequelize.STRING(255),
+      disabled: Sequelize.BOOLEAN,
 
+      createdAt: Sequelize.DATE,
+      updatedAt: Sequelize.DATE,
     });
   },
 

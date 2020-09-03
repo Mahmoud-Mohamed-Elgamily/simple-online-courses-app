@@ -7,4 +7,6 @@ module.exports = sequelize.define('Course', {
   description: Sequelize.TEXT,
   points: Sequelize.INTEGER,
   image: Sequelize.BLOB,
+}, {
+  tableName: 'courses'
 })

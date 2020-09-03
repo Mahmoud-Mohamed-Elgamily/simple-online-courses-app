@@ -1,24 +1,47 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../database/connection')
+const bcrypt = require("bcrypt");
 
 module.exports = sequelize.define('User', {
-
-  id: Sequelize.UUIDV4,
-  name: Sequelize.STRING(15),
-  email: Sequelize.STRING(100),
-  password_hash: Sequelize.DataTypes.STRING,
-  password: {
-    type: Sequelize.DataTypes.VIRTUAL,
-    set: function (val) {
-      this.setDataValue('password', val); // Remember to set the data value, otherwise it won't be validated
-      this.setDataValue('password_hash', this.salt + val);
-    },
+  id: {
+    type: Sequelize.UUIDV4,
+    primaryKey: true,
+    defaultValue: Sequelize.UUIDV1
+  },
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: Sequelize.STRING(100),
+    allowNull: false,
+    unique: true,
     validate: {
-      isLongEnough: function (val) {
-        if (val.length < 7) {
-          throw new Error("Please choose a longer password")
-        }
-      }
+      isEmail: true,
     }
-  }
+  },
+  role: {
+    type: Sequelize.ENUM,
+    values: ['user', 'admin'],
+    defaultValue:'user',
+  },
+  password: Sequelize.STRING(255),
+  disabled:Sequelize.BOOLEAN,
+  
+  createdAt: Sequelize.DATE,
+  updatedAt: Sequelize.DATE,
+}, {
+  hooks: {
+    beforeCreate: (user) => {
+      const salt = bcrypt.genSaltSync();
+      user.password = bcrypt.hashSync(user.password, salt);
+    }
+  },
+  instanceMethods: {
+    validPassword: function(password) {
+      return bcrypt.compareSync(password, this.password);
+    }
+  },
+  // timestamps: false,
+  tableName: 'users'
 })

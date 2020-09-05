@@ -4,8 +4,9 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/allUsers', controller.allUsers);
-router.get('/disable/:id', controller.singleUser);
+router.get('/allUsers/:offset/:limit/:name?', controller.allUsers);
 router.post('/addUser', controller.saveUser);
+router.post('/disable', controller.disableUsers);
+router.post('/enable', controller.enableUsers);
 
 module.exports = router;

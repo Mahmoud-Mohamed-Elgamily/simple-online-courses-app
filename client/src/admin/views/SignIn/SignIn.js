@@ -3,6 +3,7 @@ import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
+import authProvider from 'services/authProvider'
 import {
   Grid,
   Button,
@@ -172,7 +173,7 @@ const SignIn = props => {
 
   const handleSignIn = event => {
     event.preventDefault();
-    history.push('/');
+    authProvider.login({ email: formState.values.email, password: formState.values.password }, history)
   };
 
   const hasError = field =>

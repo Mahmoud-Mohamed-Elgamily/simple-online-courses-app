@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -12,11 +11,8 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText,
-  IconButton
-} from '@material-ui/core';
+  ListItemText} from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import mockData from './data';
 
@@ -36,7 +32,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const LatestCourses = ({courses}) => {
+const LatestCourses = () => {
 
   const classes = useStyles();
 

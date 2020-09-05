@@ -20,11 +20,11 @@ import {
 const Routes = () => {
   return (
     <Switch>
-      <Redirect
+      {/* <Redirect
         exact
         from="/"
         to="/dashboard"
-      />
+      /> */}
       <RouteWithLayout
         component={DashboardView}
         exact
@@ -85,7 +85,7 @@ const Routes = () => {
         layout={MinimalLayout}
         path="/not-found"
       />
-      <Redirect to="/not-found" />
+      {/* <Redirect to="/not-found" /> */}
     </Switch>
   );
 };

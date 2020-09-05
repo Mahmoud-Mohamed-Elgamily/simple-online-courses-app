@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -41,19 +40,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersTable = props => {
-  const { className, users, ...rest } = props;
-
+const UsersTable = ({ users, selectUserHandler, page, setPage, rowsPerPage, setRowsPerPage, usersCount }) => {
   const classes = useStyles();
 
-  const [selectedUsers, setSelectedUsers] = useState([]);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [page, setPage] = useState(0);
-
   const handleSelectAll = event => {
-    const { users } = props;
-
-    let selectedUsers;
+    let selectedUsers
 
     if (event.target.checked) {
       selectedUsers = users.map(user => user.id);
@@ -61,27 +52,27 @@ const UsersTable = props => {
       selectedUsers = [];
     }
 
-    setSelectedUsers(selectedUsers);
+    selectUserHandler.setSelectedUsers(selectedUsers);
   };
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedUsers.indexOf(id);
+    const selectedIndex = selectUserHandler.selectedUsers.indexOf(id);
     let newSelectedUsers = [];
 
     if (selectedIndex === -1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers, id);
+      newSelectedUsers = newSelectedUsers.concat(selectUserHandler.selectedUsers, id);
     } else if (selectedIndex === 0) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(1));
-    } else if (selectedIndex === selectedUsers.length - 1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(0, -1));
+      newSelectedUsers = newSelectedUsers.concat(selectUserHandler.selectedUsers.slice(1));
+    } else if (selectedIndex === selectUserHandler.selectedUsers.length - 1) {
+      newSelectedUsers = newSelectedUsers.concat(selectUserHandler.selectedUsers.slice(0, -1));
     } else if (selectedIndex > 0) {
       newSelectedUsers = newSelectedUsers.concat(
-        selectedUsers.slice(0, selectedIndex),
-        selectedUsers.slice(selectedIndex + 1)
+        selectUserHandler.selectedUsers.slice(0, selectedIndex),
+        selectUserHandler.selectedUsers.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedUsers(newSelectedUsers);
+    selectUserHandler.setSelectedUsers(newSelectedUsers);
   };
 
   const handlePageChange = (event, page) => {
@@ -93,10 +84,7 @@ const UsersTable = props => {
   };
 
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
+    <Card>
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
@@ -105,20 +93,19 @@ const UsersTable = props => {
                 <TableRow>
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedUsers.length === users.length}
+                      checked={selectUserHandler.selectedUsers.length === users.length}
                       color="primary"
                       indeterminate={
-                        selectedUsers.length > 0 &&
-                        selectedUsers.length < users.length
+                        selectUserHandler.selectedUsers.length > 0 &&
+                        selectUserHandler.selectedUsers.length < users.length
                       }
                       onChange={handleSelectAll}
                     />
                   </TableCell>
                   <TableCell>Name</TableCell>
                   <TableCell>Email</TableCell>
-                  {/* <TableCell>Location</TableCell> */}
-                  {/* <TableCell>Phone</TableCell> */}
                   <TableCell>Role</TableCell>
+                  <TableCell>Status</TableCell>
                   <TableCell>Registration date</TableCell>
                 </TableRow>
               </TableHead>
@@ -128,11 +115,11 @@ const UsersTable = props => {
                     className={classes.tableRow}
                     hover
                     key={user.id}
-                    selected={selectedUsers.indexOf(user.id) !== -1}
+                    selected={selectUserHandler.selectedUsers.indexOf(user.id) !== -1}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
-                        checked={selectedUsers.indexOf(user.id) !== -1}
+                        checked={selectUserHandler.selectedUsers.indexOf(user.id) !== -1}
                         color="primary"
                         onChange={event => handleSelectOne(event, user.id)}
                         value="true"
@@ -150,12 +137,8 @@ const UsersTable = props => {
                       </div>
                     </TableCell>
                     <TableCell>{user.email}</TableCell>
-                    {/* <TableCell>
-                      {user.address.city}, {user.address.state},{' '}
-                      {user.address.country}
-                    </TableCell> */}
-                    {/* <TableCell>{user.phone}</TableCell> */}
-                    <TableCell>{user.role??'user'}</TableCell>
+                    <TableCell>{user.role ?? 'user'}</TableCell>
+                    <TableCell>{user.disabled ? 'Disabled' : 'Active'}</TableCell>
                     <TableCell>
                       {moment(user.createdAt).format('DD/MM/YYYY')}
                     </TableCell>
@@ -169,7 +152,7 @@ const UsersTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={users.length}
+          count={usersCount}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}

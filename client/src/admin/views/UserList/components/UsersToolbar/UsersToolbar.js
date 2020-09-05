@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
+import NewUserModal from '../NewUserForm/NewUserModal';
+import axiosInstance from 'services/serverHandler'
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
-
 import { SearchInput } from 'admin/components';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -28,33 +29,76 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersToolbar = props => {
-  const { className, ...rest } = props;
-
+const UsersToolbar = ({ users, setUsers, selectUserHandler, searchString, setSearchString }) => {
   const classes = useStyles();
+  const history = useHistory();
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const disableSelectedUsers = () => {
+    axiosInstance(history).post('/users/disable', {
+      ids: selectUserHandler.selectedUsers
+    })
+      .then(success => {
+        setUsers(users.map(user => {
+          if (selectUserHandler.selectedUsers.includes(user.id))
+            user.disabled = true
+          return user
+        }))
+        selectUserHandler.setSelectedUsers([]);
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+
+  const enableSelectedUsers = () => {
+    axiosInstance(history).post('/users/enable', {
+      ids: selectUserHandler.selectedUsers
+    })
+      .then(success => {
+        setUsers(users.map(user => {
+          if (selectUserHandler.selectedUsers.includes(user.id))
+            user.disabled = false
+          return user
+        }))
+        selectUserHandler.setSelectedUsers([]);
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
 
   return (
-    <div
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
+    <div>
       <div className={classes.row}>
         <span className={classes.spacer} />
-        {/* <Button className={classes.importButton}>Import</Button> */}
-        {/* <Button className={classes.exportButton}>Export</Button> */}
-        <Button className={classes.exportButton}>Disable Selected</Button>
-
+        <Button className={classes.exportButton} onClick={enableSelectedUsers} >Enable Selected</Button>
+        <Button className={classes.exportButton} onClick={disableSelectedUsers} >Disable Selected</Button>
         <Button
           color="primary"
           variant="contained"
+          onClick={handleClickOpen}
         >
           Add user
         </Button>
+        <NewUserModal users={users} setUsers={setUsers} open={open} setOpen={setOpen} handleClickOpen={handleClickOpen} handleClose={handleClose} />
       </div>
       <div className={classes.row}>
         <SearchInput
           className={classes.searchInput}
           placeholder="Search user"
+          value={searchString}
+          onChange={(e)=>setSearchString(e.target.value)}
         />
       </div>
     </div>

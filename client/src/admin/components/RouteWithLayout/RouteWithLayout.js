@@ -5,6 +5,10 @@ import PropTypes from 'prop-types';
 const RouteWithLayout = props => {
   const { layout: Layout, component: Component, ...rest } = props;
 
+  // if (user.role == "admin" && !!localStorage.token) {
+  //   history.push("/login");
+  // }
+
   return (
     <Route
       {...rest}

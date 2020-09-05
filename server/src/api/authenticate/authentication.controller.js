@@ -10,17 +10,23 @@ exports.logIn = (req, res) => {
 
   UserModel.findOne({ where: { email } })
     .then((user) => {
+      if (!user)
+        return res.status(203).json({ code: 403, message: 'No such Email please register' });
+
       if (bcrypt.compareSync(password, user.password)) {
         if (user.disabled)
-          return res.send('This user is disabled please contact the admin');
+          return res.status(203).json({ code: 401, message: 'This user is disabled please contact the admin' });
 
         const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret);
-        res.json({ accessToken });
+
+        res.status(200).json({ user: { name: user.name, email: user.email, role: user.role }, accessToken });
       } else {
-        res.send('Username or password incorrect');
+        return res.status(203).json({ code: 401, message: 'Username or password incorrect' });
       }
     })
-    .catch(err => res.status(500).send(err));
+    .catch(err => {
+      res.status(500).json({ code: 500, message: 'Something went wrong with the server' })
+    });
 
 }
 
@@ -29,7 +35,7 @@ exports.signUp = (req, res) => {
   UserModel.create(req.body)
     .then(user => {
       const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret);
-      res.json({ accessToken, user });
+      res.json({ user: user, accessToken });
     })
     .catch(error => {
       console.log(error);

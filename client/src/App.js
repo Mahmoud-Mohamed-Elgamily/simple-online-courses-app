@@ -1,27 +1,43 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import AdminHome from './admin/AdminHome';
+import routes from "./routes";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useHistory,
+} from "react-router-dom";
+import AdminHome from "admin/AdminHome";
+
+const RenderRoute = (route) => {
+  const history = useHistory();
+
+  document.title = route.title || "online-courses";
+  if (route.needsAuth && !!localStorage.token) {
+    history.push("/login");
+  }
+  return (
+    <Route
+      path={route.path}
+      exact
+      render={(props) => <route.component {...props} />}
+    ></Route>
+  );
+  // debugger
+};
 
 function App() {
   return (
     <div className="App">
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
+      <Router>
+        <Switch>
+          {routes.map((route, index) => (
+            <RenderRoute {...route} key={index} />
+          ))}
+        </Switch>
+      </Router>
       <AdminHome />
-    </div>
+    </div >
   );
 }
 

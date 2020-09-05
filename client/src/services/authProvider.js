@@ -12,13 +12,12 @@ export default {
         if (res.status === 203)
           return alert(res.data.message)
         localStorage.token = `Bearer ${res.data.accessToken}`;
-        localStorage.user = res.data.user
-        
-        res.data.user == 'admin' ? history.push('/dashboard') : history.push('/');
+        localStorage.user = JSON.stringify(res.data.user)
+        console.log(res.data.user.role);
+        res.data.user.role == 'admin' ? history.push('/dashboard') : history.push('/');
       })
       .catch((err) => {
         console.log(err)
-        // alert(err)
       });
   },
   register: user => {
@@ -32,19 +31,9 @@ export default {
     }).then(res => res.json())
       .then(data => data);
   },
-  logout: () => {
-    return fetch('/user/logout')
-      .then(res => res.json())
-      .then(data => data);
+  logout: (history) => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    history.push('/')
   },
-  isAuthenticated: () => {
-    return fetch('/user/authenticated')
-      .then(res => {
-        if (res.status !== 401)
-          return res.json().then(data => data);
-        else
-          return { isAuthenticated: false, user: { username: "", role: "" } };
-      });
-  }
-
 }

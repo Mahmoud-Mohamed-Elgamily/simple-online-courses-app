@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 const sequelize = require('../database/connection')
 const bcrypt = require("bcrypt");
 
-module.exports = sequelize.define('User', {
+const User = sequelize.define('User', {
   id: {
     type: Sequelize.UUIDV4,
     primaryKey: true,
@@ -23,11 +23,11 @@ module.exports = sequelize.define('User', {
   role: {
     type: Sequelize.ENUM,
     values: ['user', 'admin'],
-    defaultValue:'user',
+    defaultValue: 'user',
   },
   password: Sequelize.STRING(255),
-  disabled:Sequelize.BOOLEAN,
-  
+  disabled: Sequelize.BOOLEAN,
+
   createdAt: Sequelize.DATE,
   updatedAt: Sequelize.DATE,
 }, {
@@ -38,10 +38,15 @@ module.exports = sequelize.define('User', {
     }
   },
   instanceMethods: {
-    validPassword: function(password) {
+    validPassword: function (password) {
       return bcrypt.compareSync(password, this.password);
     }
   },
-  // timestamps: false,
   tableName: 'users'
-})
+});
+
+User.associate = (models) => {
+  User.belongsToMany(models.Course, { through: "myCourses" });
+}
+
+module.exports = User

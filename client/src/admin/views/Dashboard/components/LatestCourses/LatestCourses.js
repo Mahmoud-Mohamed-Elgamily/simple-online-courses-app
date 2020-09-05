@@ -11,10 +11,9 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText} from '@material-ui/core';
+  ListItemText
+} from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-
-import mockData from './data';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -32,36 +31,34 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const LatestCourses = () => {
+const LatestCourses = ({ courses }) => {
 
   const classes = useStyles();
-
-  const [products] = useState(mockData);
 
   return (
     <Card>
       <CardHeader
-        subtitle={`${products.length} in total`}
+        subtitle={`${courses.length} in total`}
         title="Latest courses"
       />
       <Divider />
       <CardContent className={classes.content}>
         <List>
-          {products.map((product, i) => (
+          {courses.length > 0 && courses.map((course, i) => (
             <ListItem
-              divider={i < products.length - 1}
-              key={product.id}
+              divider={i < courses.length - 1}
+              key={course.id}
             >
               <ListItemAvatar>
                 <img
                   alt="Product"
                   className={classes.image}
-                  src={product.imageUrl}
+                  src={course.imageUrl}
                 />
               </ListItemAvatar>
               <ListItemText
-                primary={product.name}
-                secondary={`Updated ${product.updatedAt.fromNow()}`}
+                primary={course.name}
+                secondary={`Updated ${course.updatedAt.fromNow()}`}
               />
             </ListItem>
           ))}

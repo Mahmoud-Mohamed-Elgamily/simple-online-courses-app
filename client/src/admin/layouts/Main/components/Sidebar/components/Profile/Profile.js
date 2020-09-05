@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import userProvider from 'services/userProvider'
+import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
 import { Avatar, Typography } from '@material-ui/core';
 
@@ -27,9 +28,9 @@ const Profile = props => {
   const classes = useStyles();
 
   const user = {
-    name: 'Shen Zhi',
+    name: userProvider.loggedUser ? userProvider.loggedUser.name : '',
     avatar: '/images/avatars/avatar_11.png',
-    bio: 'Brain Director'
+    bio: userProvider.loggedUser ? userProvider.loggedUser.email : ''
   };
 
   return (

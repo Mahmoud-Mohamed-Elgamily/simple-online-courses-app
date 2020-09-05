@@ -6,6 +6,7 @@ const env = process.env;
 const port = env.PORT || 6066;
 
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 
 // db connection

@@ -91,14 +91,21 @@ const UsersToolbar = ({ users, setUsers, selectUserHandler, searchString, setSea
         >
           Add user
         </Button>
-        <NewUserModal users={users} setUsers={setUsers} open={open} setOpen={setOpen} handleClickOpen={handleClickOpen} handleClose={handleClose} />
+        <NewUserModal
+          open={open}
+          users={users}
+          setOpen={setOpen}
+          setUsers={setUsers}
+          handleClose={handleClose}
+          handleClickOpen={handleClickOpen}
+        />
       </div>
       <div className={classes.row}>
         <SearchInput
           className={classes.searchInput}
-          placeholder="Search user"
+          placeholder="Search users"
           value={searchString}
-          onChange={(e)=>setSearchString(e.target.value)}
+          onChange={(e) => setSearchString(e.target.value)}
         />
       </div>
     </div>

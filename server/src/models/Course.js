@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../database/connection')
+const UserModel = require('./User')
+const CategoryModel = require('./Category')
 
 const Course = sequelize.define('Course', {
   id: {
@@ -10,14 +12,15 @@ const Course = sequelize.define('Course', {
   name: Sequelize.STRING(15),
   description: Sequelize.TEXT,
   points: Sequelize.INTEGER,
-  image: Sequelize.BLOB('long'),
+  image: Sequelize.STRING,
+  createdAt: Sequelize.DATE,
+  updatedAt: Sequelize.DATE,
 }, {
   tableName: 'courses'
 })
 
-Course.associate = (models) => {
-  Course.belongsToMany(models.User, { through: "student" });
-  Course.belongsToMany(Category, { through: "categories" });
-}
+Course.belongsToMany(UserModel, { through: "CoursesUsers" });
+Course.belongsToMany(CategoryModel, { through: "CategoryCourses" });
+
 
 module.exports = Course

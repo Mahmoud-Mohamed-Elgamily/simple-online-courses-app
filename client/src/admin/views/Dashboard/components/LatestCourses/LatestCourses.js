@@ -44,14 +44,14 @@ const LatestCourses = ({ courses }) => {
       <Divider />
       <CardContent className={classes.content}>
         <List>
-          {courses.length > 0 && courses.map((course, i) => (
+          {courses.length > 0 ? courses.map((course, i) => (
             <ListItem
               divider={i < courses.length - 1}
               key={course.id}
             >
               <ListItemAvatar>
                 <img
-                  alt="Product"
+                  alt="Course"
                   className={classes.image}
                   src={course.imageUrl}
                 />
@@ -61,7 +61,7 @@ const LatestCourses = ({ courses }) => {
                 secondary={`Updated ${course.updatedAt.fromNow()}`}
               />
             </ListItem>
-          ))}
+          )):'Add Some Courses !'}
         </List>
       </CardContent>
       <Divider />

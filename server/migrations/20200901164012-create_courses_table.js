@@ -11,7 +11,7 @@ module.exports = {
       name: Sequelize.STRING(15),
       description: Sequelize.TEXT,
       points: Sequelize.INTEGER,
-      image: Sequelize.BLOB,
+      image: Sequelize.STRING,
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
     })

@@ -1,2 +1,2 @@
-export { default as ProductCard } from './ProductCard';
-export { default as ProductsToolbar } from './ProductsToolbar';
+export { default as CoursesCard } from './CoursesCard';
+export { default as CoursesToolbar } from './CoursesToolbar';

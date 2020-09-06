@@ -9,6 +9,8 @@ module.exports = {
         defaultValue: Sequelize.UUIDV1
       },
       name: Sequelize.STRING(15),
+      createdAt: Sequelize.DATE,
+      updatedAt: Sequelize.DATE,
     })
   },
   down: async (queryInterface, Sequelize) => {

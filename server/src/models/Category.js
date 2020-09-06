@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const sequelize = require('../database/connection')
+// const CourseModel = require('./Course')
 
 const Category = sequelize.define('Category', {
   id: {
@@ -8,12 +9,12 @@ const Category = sequelize.define('Category', {
     defaultValue: Sequelize.UUIDV1
   },
   name: Sequelize.STRING(15),
+  createdAt: Sequelize.DATE,
+  updatedAt: Sequelize.DATE,
 }, {
   tableName: 'categories'
 })
 
-Category.associate = (models) => {
-  Category.belongsToMany(models.Course, { through: "courses" });
-}
+// Category.belongsToMany(CourseModel, { through: "CategoryCourse"  });
 
 module.exports = Category

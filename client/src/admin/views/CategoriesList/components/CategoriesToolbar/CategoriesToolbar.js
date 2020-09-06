@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
-
 import { SearchInput } from 'admin/components';
+import { useHistory } from 'react-router-dom';
+import NewCategoriesModal from '../NewCategoryForm/NewCategoryModal';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -28,39 +28,53 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ProductsToolbar = props => {
-  const { className, ...rest } = props;
-
+const CategoriesToolbar = ({ categories, setCategories, searchString, setSearchString }) => {
   const classes = useStyles();
+  const history = useHistory();
+
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
-    <div
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
+    <div>
       <div className={classes.row}>
         <span className={classes.spacer} />
-        <Button className={classes.importButton}>Import</Button>
-        <Button className={classes.exportButton}>Export</Button>
         <Button
           color="primary"
           variant="contained"
+          onClick={handleClickOpen}
         >
-          Add product
+          Add Category
         </Button>
+        <NewCategoriesModal
+          open={open}
+          categories={categories}
+          setOpen={setOpen}
+          setCategories={setCategories}
+          handleClose={handleClose}
+          handleClickOpen={handleClickOpen}
+        />
       </div>
       <div className={classes.row}>
         <SearchInput
+          placeholder="Search Categories"
           className={classes.searchInput}
-          placeholder="Search product"
+          value={searchString}
+          onChange={(e) => setSearchString(e.target.value)}
         />
       </div>
     </div>
   );
 };
 
-ProductsToolbar.propTypes = {
+CategoriesToolbar.propTypes = {
   className: PropTypes.string
 };
 
-export default ProductsToolbar;
+export default CategoriesToolbar;

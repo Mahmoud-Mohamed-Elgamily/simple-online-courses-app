@@ -7,12 +7,13 @@ copy then paste the following lines into terminal
 - $ git clone https://github.com/Mahmoud-Mohamed-Elgamily/simple-online-courses-app.git
 - $ cd server
 - $ npm i
-- $ npm i
 - $ npm run dev
-- configure .env file with database credentials then run the following command
-- $ php artisan migrate
-- $ php artisan serve
+  open other terminal in the main repo directory
+- $ cd client
+- $ npm i
+- $ npm start
 
+you are all set now wait for seconds and the website will open in your default browser!
 
 ## Workflow
 - Backend(Express)

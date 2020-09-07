@@ -75,7 +75,6 @@ const Home = () => {
           </Grid>
         </Grid>
 
-
         <Grid
           container
           spacing={3}

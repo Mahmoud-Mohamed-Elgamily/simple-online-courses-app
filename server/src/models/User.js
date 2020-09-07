@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
       values: ['user', 'admin'],
       defaultValue: 'user',
     },
+    points:{
+      type: Sequelize.INTEGER,
+      defaultValue:0,
+    },
     password: Sequelize.STRING(255),
     disabled: Sequelize.BOOLEAN,
 

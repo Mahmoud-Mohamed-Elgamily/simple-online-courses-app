@@ -1,4 +1,5 @@
 import axiosInstance from './serverHandler'
+import userProvider from './userProvider'
 
 export default {
   all: (history, page, rows, category, setCourses, setCoursesCount, setCategories, search) => {
@@ -23,7 +24,29 @@ export default {
       userId, courseId
     })
       .then(response => {
-        console.log(response);
+        localStorage.setItem('courses', response.data)
+      })
+      .catch(error => console.log(error))
+  },
+  cancel: (history, courseId, userId) => {
+    axiosInstance(history).post(`/client/cancel`, {
+      userId, courseId
+    })
+      .then(response => {
+        localStorage.setItem('courses', response.data)
+      })
+      .catch(error => console.log(error))
+  },
+  finish: (history, courseId, userId) => {
+    axiosInstance(history).post(`/client/finish`, {
+      userId, courseId
+    })
+      .then(response => {
+        let x = JSON.parse(localStorage.user)
+        x.points = response.data.points
+        
+        localStorage.user = JSON.stringify(x)
+        localStorage.setItem('courses', response.data.courses)
       })
       .catch(error => console.log(error))
   }

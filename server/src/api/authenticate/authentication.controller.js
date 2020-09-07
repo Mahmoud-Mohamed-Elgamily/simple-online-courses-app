@@ -25,7 +25,7 @@ exports.logIn = (req, res) => {
 
         const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret);
 
-        res.status(200).json({ user: {id:user.id, name: user.name, email: user.email, role: user.role, }, courses: user.Courses, accessToken });
+        res.status(200).json({ user: {id:user.id, name: user.name, email: user.email, role: user.role,points:user.points }, courses: user.Courses, accessToken });
       } else {
         return res.status(203).json({ code: 401, message: 'Username or password incorrect' });
       }

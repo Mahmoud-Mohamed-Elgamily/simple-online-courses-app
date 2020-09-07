@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -48,18 +48,26 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const CoursesCard = ({ course }) => {
+const CoursesCard = ({ course, setCourses }) => {
   const classes = useStyles();
   const history = useHistory()
-  const [courseId, setCourseId] = useState(course.id)
+  const [courseId] = useState(course.id)
+  const [enrolled, setEnrolled] = useState(!!userProvider.courses?.includes(course.id))
+
+  useEffect(() => {
+    setEnrolled(!!userProvider.courses?.includes(course.id))
+  }, [course.id])
 
   const enroll = () => {
-    coursesProvider.enroll(history, courseId, userProvider.loggedUser.id)
+    coursesProvider.enroll(history, courseId, userProvider.loggedUser?.id)
+    setEnrolled(true)
   }
 
   const cancel = () => {
-    coursesProvider.enroll(history, courseId, userProvider.loggedUser.id)
+    coursesProvider.cancel(history, courseId, userProvider.loggedUser?.id)
+    setEnrolled(false)
   }
+
   return (
     <Card>
       <CardContent>
@@ -88,7 +96,7 @@ const CoursesCard = ({ course }) => {
           </Grid>
           {userProvider.isAuthenticated() ?
             <Grid>
-              {userProvider.courses.includes(course.id) ?
+              {enrolled ?
                 < IconButton color="inherit" onClick={cancel}>
                   Cancel ?
                 </IconButton>

@@ -9,6 +9,7 @@ import './MyCourses.css'
 
 const MyCourses = () => {
   const [courses, setCourses] = useState([])
+  const [points, setPoints] = useState(userProvider.loggedUser.points)
   const history = useHistory()
   useEffect(() => {
     coursesProvider.userCourses(history, setCourses, userProvider.loggedUser.id)
@@ -18,14 +19,14 @@ const MyCourses = () => {
     <div>
       <Navbar />
       <Container maxWidth="lg" className={'page-start'}>
-        <h3>Points : {userProvider.loggedUser.points}</h3>
+        <h3>Points : {points}</h3>
         <Grid
           container
           spacing={3}
         >
           {courses.length > 0 ? courses.map(course => (
             <Grid item key={course.id} lg={4} md={6} xs={12}>
-              <MyCourseCard course={course} />
+              <MyCourseCard course={course} coursesHandler={{courses, setCourses}} pointsHandler={{points,setPoints}} />
             </Grid>
           )) :
             <Grid item lg={4} md={6} xs={12} style={{ marginTop: 25 }}>

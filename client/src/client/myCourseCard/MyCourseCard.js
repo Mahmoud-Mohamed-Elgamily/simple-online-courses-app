@@ -12,7 +12,6 @@ import {
 } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import userProvider from 'services/userProvider'
-import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import coursesProvider from 'services/coursesProvider';
 import { useHistory } from 'react-router-dom';
 
@@ -48,17 +47,20 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const MyCourseCard = ({ course }) => {
+const MyCourseCard = ({ course, coursesHandler, pointsHandler }) => {
   const classes = useStyles();
   const history = useHistory()
-  const [courseId, setCourseId] = useState(course.id)
+  const [courseData] = useState(course)
 
   const cancel = () => {
-    coursesProvider.enroll(history, courseId, userProvider.loggedUser.id)
+    coursesProvider.cancel(history, courseData.id, userProvider.loggedUser.id)
+    coursesHandler.setCourses(coursesHandler.courses.filter(course => course.id !== courseData.id))
   }
 
   const finish = () => {
-
+    coursesProvider.finish(history, courseData.id, userProvider.loggedUser.id)
+    coursesHandler.setCourses(coursesHandler.courses.filter(course => course.id !== courseData.id))
+    pointsHandler.setPoints(pointsHandler.points + courseData.points)
   }
 
   return (
@@ -72,7 +74,7 @@ const MyCourseCard = ({ course }) => {
           />
         </div>
         <Typography align="center" gutterBottom variant="h4">
-          {course.name}
+          {course.name} ({course.points}pts)
         </Typography>
         <Typography align="center" variant="body1">
           {course.description}

@@ -15,6 +15,22 @@ copy then paste the following lines into terminal
 
 you are all set now wait for seconds and the website will open in your default browser!
 
+## Q&A
+
+1- Why did I choose this solution architecture for the backend?    
+  - I am familiar with express and I know it is great for building apis as fast as possible.    
+  - After reading the task and user stories i decided to go with sql for my database it is better to implement relations using sql and the task had a lot of relations.
+2- What do I like and dislike about Node/Javascript compared to other
+programming languages?
+    Likes:        
+      - It is easy to understand
+      - The code readability makes it easy to work with others
+      - Coercion it seems hard at the beginning but it is very helpful when you understand it well
+    Dislikes:        
+      - the too many dependencies I have to deal with        
+      - code can easily get unorganised 
+    
+    
 ## Workflow
 - Backend(Express)
   - setting up DataBase

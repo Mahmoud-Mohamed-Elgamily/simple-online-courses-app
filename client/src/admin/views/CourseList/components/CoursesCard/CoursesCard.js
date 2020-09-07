@@ -41,6 +41,16 @@ const useStyles = makeStyles(theme => ({
   statsIcon: {
     color: theme.palette.icon,
     marginRight: theme.spacing(1)
+  },
+  edit: {
+    '&:hover': {
+      color: '#3f51b5'
+    },
+  },
+  delete: {
+    '&:hover': {
+      color: 'red'
+    },
   }
 }));
 

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
 import { SearchInput } from 'admin/components';
-import { useHistory } from 'react-router-dom';
 import NewCategoriesModal from '../NewCategoryForm/NewCategoryModal';
 
 const useStyles = makeStyles(theme => ({
@@ -30,7 +29,6 @@ const useStyles = makeStyles(theme => ({
 
 const CategoriesToolbar = ({ categories, setCategories, searchString, setSearchString }) => {
   const classes = useStyles();
-  const history = useHistory();
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {

@@ -1,28 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
+import auth from 'services/authProvider';
+import { Link as RouterLink, withRouter, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
 import {
   Grid,
   Button,
-  IconButton,
   TextField,
   Link,
   FormHelperText,
-  Checkbox,
   Typography
 } from '@material-ui/core';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const schema = {
-  firstName: {
-    presence: { allowEmpty: false, message: 'is required' },
-    length: {
-      maximum: 32
-    }
-  },
-  lastName: {
+  name: {
     presence: { allowEmpty: false, message: 'is required' },
     length: {
       maximum: 32
@@ -40,10 +32,6 @@ const schema = {
     length: {
       maximum: 128
     }
-  },
-  policy: {
-    presence: { allowEmpty: false, message: 'is required' },
-    checked: true
   }
 };
 
@@ -62,7 +50,7 @@ const useStyles = makeStyles(theme => ({
   },
   quote: {
     backgroundColor: theme.palette.neutral,
-    height: '100%',
+    height: '91vh',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -114,7 +102,8 @@ const useStyles = makeStyles(theme => ({
   form: {
     paddingLeft: 100,
     paddingRight: 100,
-    paddingBottom: 125,
+    paddingTop: 75,
+    paddingBottom: 75,
     flexBasis: 700,
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(2),
@@ -141,8 +130,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SignUp = props => {
-  const { history } = props;
 
+  const history = useHistory()
   const classes = useStyles();
 
   const [formState, setFormState] = useState({
@@ -181,13 +170,9 @@ const SignUp = props => {
     }));
   };
 
-  const handleBack = () => {
-    history.goBack();
-  };
-
-  const handleSignUp = event => {
+  const handleSignUp = async (event) => {
     event.preventDefault();
-    history.push('/');
+    auth.register(formState.values,history)
   };
 
   const hasError = field =>
@@ -210,21 +195,21 @@ const SignUp = props => {
                 className={classes.quoteText}
                 variant="h1"
               >
-                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                they sold out High Life.
+                Enjoy learning among thousands of people who share same interests as you.
+                Start Now !
               </Typography>
               <div className={classes.person}>
                 <Typography
                   className={classes.name}
                   variant="body1"
                 >
-                  Takamaru Ayako
+                  Mahmoud El-Gamily
                 </Typography>
                 <Typography
                   className={classes.bio}
                   variant="body2"
                 >
-                  Manager at inVision
+                  Promising Developer
                 </Typography>
               </div>
             </div>
@@ -237,11 +222,6 @@ const SignUp = props => {
           xs={12}
         >
           <div className={classes.content}>
-            <div className={classes.contentHeader}>
-              <IconButton onClick={handleBack}>
-                <ArrowBackIcon />
-              </IconButton>
-            </div>
             <div className={classes.contentBody}>
               <form
                 className={classes.form}
@@ -261,30 +241,16 @@ const SignUp = props => {
                 </Typography>
                 <TextField
                   className={classes.textField}
-                  error={hasError('firstName')}
+                  error={hasError('name')}
                   fullWidth
                   helperText={
-                    hasError('firstName') ? formState.errors.firstName[0] : null
+                    hasError('name') ? formState.errors.name[0] : null
                   }
-                  label="First name"
-                  name="firstName"
+                  label="Name"
+                  name="name"
                   onChange={handleChange}
                   type="text"
-                  value={formState.values.firstName || ''}
-                  variant="outlined"
-                />
-                <TextField
-                  className={classes.textField}
-                  error={hasError('lastName')}
-                  fullWidth
-                  helperText={
-                    hasError('lastName') ? formState.errors.lastName[0] : null
-                  }
-                  label="Last name"
-                  name="lastName"
-                  onChange={handleChange}
-                  type="text"
-                  value={formState.values.lastName || ''}
+                  value={formState.values.name || ''}
                   variant="outlined"
                 />
                 <TextField
@@ -315,31 +281,6 @@ const SignUp = props => {
                   value={formState.values.password || ''}
                   variant="outlined"
                 />
-                <div className={classes.policy}>
-                  <Checkbox
-                    checked={formState.values.policy || false}
-                    className={classes.policyCheckbox}
-                    color="primary"
-                    name="policy"
-                    onChange={handleChange}
-                  />
-                  <Typography
-                    className={classes.policyText}
-                    color="textSecondary"
-                    variant="body1"
-                  >
-                    I have read the{' '}
-                    <Link
-                      color="primary"
-                      component={RouterLink}
-                      to="#"
-                      underline="always"
-                      variant="h6"
-                    >
-                      Terms and Conditions
-                    </Link>
-                  </Typography>
-                </div>
                 {hasError('policy') && (
                   <FormHelperText error>
                     {formState.errors.policy[0]}

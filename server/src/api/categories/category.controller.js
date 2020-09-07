@@ -1,10 +1,10 @@
 'use strict'
 const Sequelize = require('sequelize');
-const CategoryModel = require('../../models/Category');
+const { db } = require('../../models');
 
 exports.allCategories = (req, res) => {
   console.log(req.body.name);
-  CategoryModel.findAndCountAll({
+  db.Category.findAndCountAll({
     order: [["createdAt", "DESC"]],
     limit: req.params.limit,
     offset: req.params.offset,
@@ -23,7 +23,7 @@ exports.allCategories = (req, res) => {
 
 exports.newCategory = (req, res) => {
   if (req.user.role == "admin")
-    CategoryModel.create({ name: req.body.name })
+    db.Category.create({ name: req.body.name })
       .then(category => {
         res.status(200).json(category);
       })
@@ -37,7 +37,7 @@ exports.newCategory = (req, res) => {
 
 exports.deleteCategory = (req, res) => {
   if (req.user.role == "admin")
-    CategoryModel.destroy({
+    db.Category.destroy({
       where: {
         id: req.params.id
       }
@@ -50,7 +50,7 @@ exports.deleteCategory = (req, res) => {
 
 exports.updateCategory = (req, res) => {
   if (req.user.role == "admin")
-    CategoryModel.update({ name: req.body.name }, {
+    db.Category.update({ name: req.body.name }, {
       where: {
         id: req.params.id
       }

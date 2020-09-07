@@ -14,7 +14,7 @@ const Dashboard = () => {
   const classes = useStyles();
   const [counters, setCounters] = useState({})
   const [latestCourses, setLatestCourses] = useState([])
-
+  const [coursesCount, setCoursesCount] = useState(0)
   useEffect(() => {
     axiosInstance()
       .get('/dashboard/home')
@@ -23,7 +23,10 @@ const Dashboard = () => {
 
     axiosInstance()
       .get('/dashboard/courses')
-      .then(data => setLatestCourses(data.data))
+      .then(data => {
+        setLatestCourses(data.data.rows)
+        setCoursesCount(data.data.count)
+      })
       .catch(err => console.log(err))
   }, [])
 
@@ -46,7 +49,7 @@ const Dashboard = () => {
           <HeaderCard title="COURSES" count={counters.coursesCount} image="https://image.flaticon.com/icons/svg/2963/2963006.svg" />
         </Grid>
         <Grid item lg={3} md={6} xl={3} xs={12}>
-          <LatestCourses courses={latestCourses}/>
+          <LatestCourses courses={latestCourses} coursesCount={coursesCount}/>
         </Grid>
       </Grid>
     </div>

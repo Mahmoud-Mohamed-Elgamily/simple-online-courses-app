@@ -1,21 +1,20 @@
 import React from 'react';
 import './App.css';
 import routes from "./routes";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useHistory,
-} from "react-router-dom";
-import AdminHome from "admin/AdminHome";
+import { BrowserRouter as Router, Route, useHistory } from "react-router-dom";
+import Routes from 'admin/Routes';
+import { ThemeProvider } from '@material-ui/core';
+import theme from 'admin/theme';
+import userProvider from 'services/userProvider';
 
 const RenderRoute = (route) => {
   const history = useHistory();
 
   document.title = route.title || "online-courses";
-  if (route.needsAuth && !!localStorage.token) {
-    history.push("/login");
-  }
+  // console.log(route.needsAuth && !userProvider.isAuthenticated());
+  // if (route.needsAuth && !userProvider.isAuthenticated()) {
+  //   history.push("/sign-in");
+  // }
   return (
     <Route
       path={route.path}
@@ -23,20 +22,20 @@ const RenderRoute = (route) => {
       render={(props) => <route.component {...props} />}
     ></Route>
   );
-  // debugger
 };
 
 function App() {
   return (
     <div className="App">
-      <Router>
-        <Switch>
+      <ThemeProvider theme={theme}>
+        <Router>
           {routes.map((route, index) => (
             <RenderRoute {...route} key={index} />
           ))}
-        </Switch>
-      </Router>
-      <AdminHome />
+          <Routes />
+        </Router>
+      </ThemeProvider>
+
     </div >
   );
 }

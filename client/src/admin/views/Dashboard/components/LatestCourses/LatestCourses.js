@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -14,6 +15,7 @@ import {
   ListItemText
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -31,7 +33,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const LatestCourses = ({ courses }) => {
+const LatestCourses = ({ courses, coursesCount }) => {
 
   const classes = useStyles();
 
@@ -53,27 +55,30 @@ const LatestCourses = ({ courses }) => {
                 <img
                   alt="Course"
                   className={classes.image}
-                  src={course.imageUrl}
+                  src={`http://localhost:6066/${course.image}`}
                 />
               </ListItemAvatar>
               <ListItemText
                 primary={course.name}
-                secondary={`Updated ${course.updatedAt.fromNow()}`}
+                secondary={`Added At ${moment(course.createdAt).format('DD/MM/YYYY')}`}
               />
             </ListItem>
-          )):'Add Some Courses !'}
+          )) : 'Add Some Courses !'}
         </List>
       </CardContent>
       <Divider />
-      <CardActions className={classes.actions}>
-        <Button
-          color="primary"
-          size="small"
-          variant="text"
-        >
-          View all <ArrowRightIcon />
-        </Button>
-      </CardActions>
+      {coursesCount > 5 &&
+        <CardActions className={classes.actions}>
+          <Link to='/courses'>
+            <Button
+              color="primary"
+              size="small"
+              variant="text"
+            >
+              View all <ArrowRightIcon />
+            </Button>
+          </Link>
+        </CardActions>}
     </Card>
   );
 };

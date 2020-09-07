@@ -34,6 +34,7 @@ const CourseList = () => {
   useEffect(() => {
     axiosInstance(history).get(`/courses/allCourses/${page}/${rowsPerPage}/${searchString}`)
       .then(response => {
+        console.log(response);
         setCategories(response.data.categories)
         setCoursesCount(response.data.courses.count)
         setCourses(response.data.courses.rows)

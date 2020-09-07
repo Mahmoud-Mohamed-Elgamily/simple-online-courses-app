@@ -3,12 +3,18 @@ const bcrypt = require('bcrypt')
 const accessTokenSecret = process.env.SECRET || 'T0p$3crE7';
 
 const jwt = require('jsonwebtoken');
-const UserModel = require('../../models/User');
+const { db } = require('../../models');
+
 
 exports.logIn = (req, res) => {
   const { email, password } = req.body;
 
-  UserModel.findOne({ where: { email } })
+  db.User.findOne({
+    where: { email },
+    include: {
+      model: db.Course,
+    }
+  })
     .then((user) => {
       if (!user)
         return res.status(203).json({ code: 403, message: 'No such Email please register' });
@@ -19,7 +25,7 @@ exports.logIn = (req, res) => {
 
         const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret);
 
-        res.status(200).json({ user: { name: user.name, email: user.email, role: user.role }, accessToken });
+        res.status(200).json({ user: {id:user.id, name: user.name, email: user.email, role: user.role, }, courses: user.Courses, accessToken });
       } else {
         return res.status(203).json({ code: 401, message: 'Username or password incorrect' });
       }
@@ -32,7 +38,7 @@ exports.logIn = (req, res) => {
 
 exports.signUp = (req, res) => {
   req.body.role = 'user';
-  UserModel.create(req.body)
+  db.User.create(req.body)
     .then(user => {
       const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret);
       res.json({ user: user, accessToken });

@@ -7,14 +7,10 @@ import authProvider from 'services/authProvider'
 import {
   Grid,
   Button,
-  IconButton,
   TextField,
   Link,
   Typography
 } from '@material-ui/core';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-
-import { Facebook as FacebookIcon, Google as GoogleIcon } from 'admin/icons';
 
 const schema = {
   email: {
@@ -47,7 +43,7 @@ const useStyles = makeStyles(theme => ({
   },
   quote: {
     backgroundColor: theme.palette.neutral,
-    height: '100%',
+    height: '91vh',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -99,6 +95,7 @@ const useStyles = makeStyles(theme => ({
   form: {
     paddingLeft: 100,
     paddingRight: 100,
+    paddingTop:125,
     paddingBottom: 125,
     flexBasis: 700,
     [theme.breakpoints.down('sm')]: {
@@ -148,10 +145,6 @@ const SignIn = props => {
     }));
   }, [formState.values]);
 
-  const handleBack = () => {
-    history.goBack();
-  };
-
   const handleChange = event => {
     event.persist();
 
@@ -196,21 +189,21 @@ const SignIn = props => {
                 className={classes.quoteText}
                 variant="h1"
               >
-                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                they sold out High Life.
+                Enjoy learning among thousands of people who share same interests as you.
+                Start Now !
               </Typography>
               <div className={classes.person}>
                 <Typography
                   className={classes.name}
                   variant="body1"
                 >
-                  Takamaru Ayako
+                  Mahmoud El-Gamily
                 </Typography>
                 <Typography
                   className={classes.bio}
                   variant="body2"
                 >
-                  Manager at inVision
+                  Promising Developer
                 </Typography>
               </div>
             </div>
@@ -223,11 +216,6 @@ const SignIn = props => {
           xs={12}
         >
           <div className={classes.content}>
-            <div className={classes.contentHeader}>
-              <IconButton onClick={handleBack}>
-                <ArrowBackIcon />
-              </IconButton>
-            </div>
             <div className={classes.contentBody}>
               <form
                 className={classes.form}
@@ -238,47 +226,6 @@ const SignIn = props => {
                   variant="h2"
                 >
                   Sign in
-                </Typography>
-                <Typography
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  Sign in with social media
-                </Typography>
-                <Grid
-                  className={classes.socialButtons}
-                  container
-                  spacing={2}
-                >
-                  <Grid item>
-                    <Button
-                      color="primary"
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained"
-                    >
-                      <FacebookIcon className={classes.socialIcon} />
-                      Login with Facebook
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained"
-                    >
-                      <GoogleIcon className={classes.socialIcon} />
-                      Login with Google
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Typography
-                  align="center"
-                  className={classes.sugestion}
-                  color="textSecondary"
-                  variant="body1"
-                >
-                  or login with email address
                 </Typography>
                 <TextField
                   className={classes.textField}

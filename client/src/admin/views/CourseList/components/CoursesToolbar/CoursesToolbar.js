@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import axiosInstance from 'services/serverHandler'
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
 import { SearchInput } from 'admin/components';

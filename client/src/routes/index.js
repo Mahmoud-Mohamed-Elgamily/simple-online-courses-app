@@ -1,11 +1,18 @@
 import Home from "client/home/Home";
+import MyCourses from "client/myCourses/MyCourses";
 
 const routes = [
   {
-    path: "/home",
+    path: "/",
     component: Home,
-    title: "dashboard",
+    title: "home",
     needsAuth: false,
+  },
+  {
+    path: "/myCourses",
+    component: MyCourses,
+    title: "My Courses",
+    needsAuth: true,
   },
 ];
 

@@ -1,10 +1,10 @@
 'use strict'
 const Sequelize = require('sequelize');
-const UserModel = require('../../models/User');
+const { db } = require('../../models');
 
 exports.allUsers = (req, res) => {
   console.log(req.params.name);
-  UserModel.findAndCountAll({
+  db.User.findAndCountAll({
     order: [["createdAt", "DESC"]],
     limit: req.params.limit,
     offset: req.params.offset,
@@ -24,7 +24,7 @@ exports.allUsers = (req, res) => {
 }
 
 exports.enableUsers = (req, res) => {
-  UserModel.update(
+  db.User.update(
     { disabled: false },
     {
       where: {
@@ -43,7 +43,7 @@ exports.enableUsers = (req, res) => {
 
 exports.saveUser = (req, res) => {
   if (req.user.role == "admin")
-    UserModel.create(req.body.newUser)
+    db.User.create(req.body.newUser)
       .then(user => {
         res.json(user);
       })
@@ -57,7 +57,7 @@ exports.saveUser = (req, res) => {
 
 exports.disableUsers = (req, res) => {
   if (req.user.role == "admin")
-    UserModel.update(
+    db.User.update(
       { disabled: true },
       {
         where: {

@@ -6,4 +6,5 @@ module.exports = (app) => {
   app.use('/dashboard', authenticateJWT, require('./dashboard/dashboard.routes'));
   app.use('/categories', authenticateJWT, require('./categories/category.routes'));
   app.use('/courses', authenticateJWT, require('./course/course.routes'));
+  app.use('/client', require('./client/client.routes'));
 }

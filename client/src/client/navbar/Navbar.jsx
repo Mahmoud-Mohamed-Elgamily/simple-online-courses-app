@@ -10,6 +10,13 @@ import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import InputIcon from '@material-ui/icons/Input';
+import { Tooltip, Container } from '@material-ui/core';
+import authProvider from 'services/authProvider';
+import { useHistory, Link } from 'react-router-dom';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import userProvider from 'services/userProvider'
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -18,8 +25,20 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
+  link: {
+    textDecoration: 'none',
+  },
+  rightLink:{
+    marginTop:12,
+    marginRight:12,
+    textDecoration: 'none',
+  },
   title: {
     display: 'none',
+    color: '#fff',
+    '&:hover': {
+      cursor: 'pointer'
+    },
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
@@ -73,122 +92,95 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
+  button: {
+    color: '#fff'
+  }
 }));
 
-export default function Navbar() {
+export default function Navbar({search,setSearch}) {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
+  const history = useHistory()
+ 
+  const logOut = () => {
+    authProvider.logout(history)
+  }
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Online-Courses
-          </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+      <AppBar position="fixed">
+        <Container maxWidth="lg">
+          <Toolbar>
+            <Link className={classes.link} to="/">
+              <Typography className={classes.title} variant="h4" noWrap>
+                Online-Courses
+              </Typography>
+            </Link>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                value={search}
+                onEnter
+                onChange={(e)=>setSearch(e.target.value)}
+                inputProps={{ 'aria-label': 'search' }}
+              />
             </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </div>
-          <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </div>
-        </Toolbar>
+            <div className={classes.grow} />
+            <div className={classes.sectionDesktop}>
+              {!userProvider.isAuthenticated() ?
+                <>
+                  <Tooltip title="Sign In">
+                    <Link to="/sign-in">
+                      <IconButton
+                        className={classes.button}
+                        aria-label="Sign-In"
+                      >
+                        <VpnKeyIcon />
+                      </IconButton>
+                    </Link>
+                  </Tooltip>
+                  <Tooltip title="Sign Up">
+                    <Link to="/sign-up">
+                      <IconButton
+                        className={classes.button}
+                        aria-label="Sign-Up"
+                      >
+                        <AccountBalanceIcon />
+                      </IconButton>
+                    </Link>
+                  </Tooltip>
+                </>
+                :
+                <>
+                  <Link to="/myCourses" className={classes.rightLink}>
+                    <Typography className={classes.button} aria-label="Sign-In" variant="h5">
+                      My Courses
+                    </Typography>
+                  </Link>
+                  <Link to="/" className={classes.rightLink}>
+                    <Typography className={classes.button} aria-label="Sign-In" variant="h5">
+                      Home
+                    </Typography>
+                  </Link>
+                  <Tooltip title="Sign Out">
+                    <IconButton
+                      className={classes.button}
+                      onClick={logOut}
+                    >
+                      <InputIcon />
+                    </IconButton>
+                  </Tooltip>
+                </>}
+            </div>
+          </Toolbar>
+        </Container>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
     </div>
   );
 }

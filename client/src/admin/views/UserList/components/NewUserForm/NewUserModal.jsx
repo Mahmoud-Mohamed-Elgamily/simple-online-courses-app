@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axiosInstance from 'services/serverHandler'
 import { useHistory } from 'react-router-dom';
-import { Checkbox, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
+import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 
 export default function NewUserModal({ users, setUsers, open, setOpen, handleClickOpen, handleClose }) {
 

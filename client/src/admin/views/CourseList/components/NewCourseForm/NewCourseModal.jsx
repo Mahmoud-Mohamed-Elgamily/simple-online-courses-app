@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axiosInstance from 'services/serverHandler'
 import { useHistory } from 'react-router-dom';
-import { Input, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { Input, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +27,10 @@ export default function NewCourseModal({ course, setCourse, categories, courses,
   const history = useHistory()
   const classes = useStyles();
   const [newCourse, setNewCourse] = useState(course ?? {})
-
+  let selectedCategories = []
+  if (course?.Categories.length > 0) {
+    selectedCategories = course.Categories?.map(cat => cat.id)
+  }
 
   const handleCourseCreation = () => {
     let formData = new FormData();
@@ -35,7 +38,7 @@ export default function NewCourseModal({ course, setCourse, categories, courses,
       if (!(entry[0] == 'id' || entry[0] == 'createdAt' || entry[0] == "updatedAt"))
         formData.append(entry[0], entry[1])
     })
-    
+
     axiosInstance(history).post('/courses/addCourse', formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -64,7 +67,7 @@ export default function NewCourseModal({ course, setCourse, categories, courses,
       headers: {
         "Content-Type": "multipart/form-data",
       },
-    }).then(updatedCourse => {
+    }).then(() => {
       setCourse(newCourse)
       setNewCourse({})
       handleClose()
@@ -122,7 +125,7 @@ export default function NewCourseModal({ course, setCourse, categories, courses,
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={newCourse.categories || []}
+              value={newCourse.categories || selectedCategories}
               multiple
               name="categories"
               onChange={handleChange}

@@ -1,52 +1,54 @@
 const Sequelize = require('sequelize')
-const sequelize = require('../database/connection')
 const bcrypt = require("bcrypt");
 
-const User = sequelize.define('User', {
-  id: {
-    type: Sequelize.UUIDV4,
-    primaryKey: true,
-    defaultValue: Sequelize.UUIDV1
-  },
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: Sequelize.STRING(100),
-    allowNull: false,
-    unique: true,
-    validate: {
-      isEmail: true,
-    }
-  },
-  role: {
-    type: Sequelize.ENUM,
-    values: ['user', 'admin'],
-    defaultValue: 'user',
-  },
-  password: Sequelize.STRING(255),
-  disabled: Sequelize.BOOLEAN,
+module.exports = (sequelize, DataTypes) => {
 
-  createdAt: Sequelize.DATE,
-  updatedAt: Sequelize.DATE,
-}, {
-  hooks: {
-    beforeCreate: (user) => {
-      const salt = bcrypt.genSaltSync();
-      user.password = bcrypt.hashSync(user.password, salt);
-    }
-  },
-  instanceMethods: {
-    validPassword: function (password) {
-      return bcrypt.compareSync(password, this.password);
-    }
-  },
-  tableName: 'users'
-});
+  const User = sequelize.define('User', {
+    id: {
+      type: Sequelize.UUIDV4,
+      primaryKey: true,
+      defaultValue: Sequelize.UUIDV1
+    },
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: Sequelize.STRING(100),
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      }
+    },
+    role: {
+      type: Sequelize.ENUM,
+      values: ['user', 'admin'],
+      defaultValue: 'user',
+    },
+    password: Sequelize.STRING(255),
+    disabled: Sequelize.BOOLEAN,
 
-User.associate = (models) => {
-  User.belongsToMany(models.Course, { through: "myCourses" });
+    createdAt: Sequelize.DATE,
+    updatedAt: Sequelize.DATE,
+  }, {
+    hooks: {
+      beforeCreate: (user) => {
+        const salt = bcrypt.genSaltSync();
+        user.password = bcrypt.hashSync(user.password, salt);
+      }
+    },
+    instanceMethods: {
+      validPassword: function (password) {
+        return bcrypt.compareSync(password, this.password);
+      }
+    },
+    tableName: 'users'
+  });
+
+  User.associate = (models) => {
+    User.belongsToMany(models.Course, { through: "CoursesUsers", foreignKey: 'userId' });
+  }
+
+  return User;
 }
-
-module.exports = User

@@ -1,0 +1,49 @@
+header#home-header {
+  margin: 95px 0 35px;
+  display: flex;
+  justify-content: space-between;
+}
+
+header#home-header img {
+  flex: 0.5;
+}
+
+header#home-header h1 {
+  font-size: 70px;
+  flex: 0.45;
+}
+#gridParent {
+  display:flex;
+  margin: 25px 0;
+}
+ul {
+  list-style: none;
+  text-align: left;
+}
+
+ul li {
+  display: inline-block;
+  margin-bottom: 7px;
+}
+
+ul li button {
+  background: none;
+  border: none;
+  padding: 4px 16px;
+  margin: 0 5px;
+  border: 1px solid #3f51b5;
+  border-radius: 15px;
+  transition: all .3s;
+}
+
+ul li:hover button {
+  cursor: pointer;
+  background-color: #3f51b5;
+  color: white;
+}
+
+.active{
+  cursor: pointer;
+  background-color: #3f51b5;
+  color: white;
+}
